@@ -33,6 +33,11 @@ char int2name(int i)
     return i + 'A';
 }
 
+void visit(int i)
+{
+    printf("%c ", int2name(i));
+}
+
 // Adjacency List Functions
 void input_adjlist(node* a[], int* V, int* E)
 {
@@ -101,6 +106,36 @@ void free_adjlist(node* a[], int V)
     }
 }
 
+// DFS for Adjacency List
+void DFS_recur_list(node* a[], int V, int i)
+{
+    node* t;
+
+    check[i] = 1;
+    visit(i);
+
+    for (t = a[i]; t != NULL; t = t->next) {
+        if (check[t->vertex] == 0) {
+            DFS_recur_list(a, V, t->vertex);
+        }
+    }
+}
+
+void DFS_adjlist(node* a[], int V)
+{
+    int i;
+
+    for (i = 0; i < V; i++)
+        check[i] = 0;
+
+    for (i = 0; i < V; i++) {
+        if (check[i] == 0) {
+            DFS_recur_list(a, V, i);
+        }
+    }
+    printf("\n");
+}
+
 // Articulation Point Functions
 int AP_recur(node* a[], int i)
 {
@@ -112,22 +147,22 @@ int AP_recur(node* a[], int i)
     for (t = a[i]; t != NULL; t = t->next) {
 
         // count the number of child nodes of root
-		if (i == 0 && check[t->vertex] == 0) // t->vertex는 root의 자식 노드
+		if (i == 0 && check[t->vertex] == 0) // root이면서 root의 자식 노드가 아직 방문되지 않은 노드인 경우
             son_of_root++;
 
 		if (check[t->vertex] == 0) {     // t->vertex가 아직 방문되지 않은 노드인 경우
 			m = AP_recur(a, t->vertex);  // t->vertex에 대해 재귀적으로 AP_recur 함수를 호출하여 m에 저장
 
             if (m < min)
-                min = m;
+				min = m;    // m이 min보다 작은 경우 min을 m으로 업데이트
 
 			if (m >= check[i] && i != 0) // m이 현재 노드의 방문 순서보다 크거나 같고, 현재 노드가 root가 아닌 경우
 				printf("* %c %2d : %d\n", int2name(i), check[i], m); // 현재 노드는 단절점이므로 '*'를 출력하고, 노드 이름, 방문 순서, m 값을 출력
             else
 				printf("  %c %2d : %d\n", int2name(i), check[i], m); // 현재 노드는 단절점이 아니므로 공백을 출력하고, 노드 이름, 방문 순서, m 값을 출력
         }
-        else {
-			if (check[t->vertex] < min) // t->vertex가 이미 방문된 노드인 경우, check[t->vertex]의 값이 min보다 작은지 확인
+		else { // t->vertex가 이미 방문된 노드인 경우
+			if (check[t->vertex] < min) // check[t->vertex]의 값이 min보다 작은지 확인
                 min = check[t->vertex];
         }
     }
@@ -162,6 +197,9 @@ int main(void)
 
     input_adjlist(GL, &V, &E);
     print_adjlist(GL, V);
+
+    printf("\nDFS_adjlist (recursive) : ");
+    DFS_adjlist(GL, V);
 
     printf("\nArticulation Point Search\n");
     AP_search(GL, V);

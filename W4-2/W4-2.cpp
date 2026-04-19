@@ -393,13 +393,13 @@ void nrDFS_adjlist(node* a[], int V)
             check[i] = 1;
 
             while (!stack_empty()) {
-                int cur = pop();
-                visit(cur);
+                int i = pop(); // 현재 노드 팝
+                visit(i);      // 방문 처리
 
-                for (t = a[cur]; t != NULL; t = t->next) {
-                    if (check[t->vertex] == 0) {
-                        push(t->vertex);
-                        check[t->vertex] = 1;
+				for (t = a[i]; t != NULL; t = t->next) { // 인접 노드 탐색
+					if (check[t->vertex] == 0) { // 방문하지 않은 노드면 스택에 추가
+						push(t->vertex);         // 스택에 인접 노드 추가, recursive와 순서가 반대
+						check[t->vertex] = 1;    // 방문 처리
                     }
                 }
             }
