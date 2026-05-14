@@ -19,15 +19,10 @@ typedef struct _node {
 node* GL[MAX_NODE];
 
 // Basic Utility Functions
-// convert node name to integer index
-// A -> 0, B -> 1, C -> 2, ...
 int name2int(char c)
 {
     return c - 'A';
 }
-
-// convert integer index to node name
-// 0 -> A, 1 -> B, 2 -> C, ...
 char int2name(int i)
 {
     return i + 'A';

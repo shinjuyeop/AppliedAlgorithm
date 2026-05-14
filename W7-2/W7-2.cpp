@@ -26,7 +26,6 @@ int name2int(char c)
 {
     return c - 'A';
 }
-
 char int2name(int i)
 {
     return i + 'A';
@@ -49,16 +48,16 @@ int find_set(int elem, int asso, int flag)
 {
     int i = elem, j = asso;
 
-    while (parent[i] >= 0)
-        i = parent[i];
+	while (parent[i] >= 0)  // i가 루트 노드가 될 때까지 parent[i]를 따라 올라감
+		i = parent[i];      // i의 루트 트리를 찾음
 
-    while (parent[j] >= 0)
-        j = parent[j];
+	while (parent[j] >= 0)  // j가 루트 노드가 될 때까지 parent[j]를 따라 올라감
+		j = parent[j];      // j의 루트 트리를 찾음
 
-    if (flag == UNION && i != j)
-        union_set(i, j);
+    if (flag == UNION && i != j) // 서로 다른 집합이면 합치기
+		union_set(i, j);         // i의 루트 트리를 j의 루트 트리에 연결하여 합침
 
-    return (i != j);
+	return (i != j);             // 서로 다른 집합이면 1, 같은 집합이면 0 반환
 }
 
 // ---------- Priority Queue for edges ----------
@@ -93,7 +92,7 @@ void downheap(int h[], int k)
     while (k <= nheap / 2) {
         i = k << 1;
 
-        if (i < nheap && Edge[h[i]].weight > Edge[h[i + 1]].weight)
+        if (i < nheap && Edge[h[i]].weight > Edge[h[i + 1]].weight) // 가중치가 더 작은 자식 노드 선택
             i++;
 
         if (Edge[v].weight <= Edge[h[i]].weight)
@@ -125,11 +124,9 @@ void input_edge(edge e[], int* V, int* E)
     char vertex[3];
     int j, w;
 
-    printf("\nInput number of nodes and edges\n");
     fscanf(fp, "%d %d", V, E);
 
     for (j = 0; j < *E; j++) {
-        printf("\nInput two nodes consisting of edge and its weight -> ");
         fscanf(fp, "%s %d", vertex, &w);
 
 		vertex[2] = NULL; // vertex[2]는 weight를 저장하는 용도로 사용되지 않으므로 NULL로 초기화
@@ -154,17 +151,17 @@ void kruskal(edge e[], int V, int E)
 	find_init(V);   // parent[] 배열 -1로 초기화
     pq_init();
 
-    // 모든 간선을 heap에 삽입
+	// 모든 edge index를 heap에 삽입
     for (n = 0; n < E; n++)
-        pq_insert(heap, n);
+		pq_insert(heap, n); // edge index n을 heap에 삽입
 
-    n = 0;  // 현재 MST에 포함된 간선 수
+    n = 0;  // 현재 MST에 포함된 edge 수
 
     while (!pq_empty()) {
         val = pq_extract(heap);  // 가장 weight 작은 간선 index
 
-        // 서로 다른 집합이면 선택 + union
-        if (find_set(e[val].v1, e[val].v2, UNION)) {
+        // 서로 다른 집합이면 선택
+		if (find_set(e[val].v1, e[val].v2, UNION)) { // 다르면 1, 같으면 0 반환
             visit(val);
             n++;
         }
@@ -180,17 +177,21 @@ int main(void)
 {
     int V, E;
 
+	// 파일 열기
     fp = fopen("C:\\Users\\shinj\\Desktop\\4-1\\AppliedAlgorithm\\graph.txt", "rt");
     if (fp == NULL) {
         printf("File open error!\n");
         return 1;
     }
 
+	// edge 정보 입력
     input_edge(Edge, &V, &E);
 
-    printf("\n\nVisited edge of minimum spanning tree\n");
+	// Kruskal 알고리즘 수행
+    printf("Visited edge of minimum spanning tree\n");
     kruskal(Edge, V, E);
 
+	// MST의 총 비용 출력
     printf("\n\nMinimum cost is \n%d\n", cost);
 
     fclose(fp);

@@ -385,7 +385,7 @@ void nrDFS_adjlist(node* a[], int V)
     init_stack();
 
     for (i = 0; i < V; i++)
-        check[i] = 0;
+		check[i] = 0;   // 방문 여부 초기화
 
     for (i = 0; i < V; i++) {
         if (check[i] == 0) {
