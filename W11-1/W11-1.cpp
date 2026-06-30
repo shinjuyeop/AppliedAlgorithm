@@ -282,10 +282,10 @@ int topsort(head net[], int V)
         printf("%c", int2name(j));
         printed++;
 
-        // remove outgoing edges of j
+		// indegree를 감소시키고, indegree가 0이 된 vertex를 push
         for (ptr = net[j].next; ptr != NULL; ptr = ptr->next) {
-            k = ptr->vertex;
-            net[k].count--;
+			k = ptr->vertex;    // j -> k
+			net[k].count--;     // decrease indegree of vertex k
 
             if (net[k].count == 0) {
                 push(k);

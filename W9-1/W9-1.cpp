@@ -387,9 +387,12 @@ void print_distance(int distance[], int x, int V)
 
 void dijkstra(int a[][MAX_NODE], int s, int V)
 {
+	// x: 현재 노드, y: 인접 노드, d: 현재 노드까지의 거리 + 인접 노드로 가는 거리
     int x = 0, y, d;
+	// checked: 방문한 노드의 개수를 세는 변수
     int i, checked = 0;
 
+	// distance[] 배열을 초기화하여 시작 노드 s에서 각 노드까지의 초기 거리를 설정
     for (x = 0; x < V; x++) {
         distance[x] = a[s][x];
 
@@ -397,34 +400,39 @@ void dijkstra(int a[][MAX_NODE], int s, int V)
             parent[x] = s;
     }
 
-    check[s] = 1;
-    checked++;
+	check[s] = 1; // 시작 노드 s를 방문한 것으로 표시
+	checked++;    // 방문한 노드의 개수를 1로 증가
 
     print_distance(distance, s, V);
 
     while (checked < V) {
         x = 0;
-
-        while (check[x])
+        
+        // check[] 배열에서 방문한 노드인 경우 다음 노드로 이동
+		while (check[x]) 
             x++;
 
+		// check[] 배열에서 방문하지 않은 노드 중에서 distance[] 배열의 값이 가장 작은 노드를 선택하여 x에 저장
         for (i = x; i < V; i++) {
             if (check[i] == 0 && distance[i] < distance[x])
                 x = i;
         }
 
+		// 선택된 노드 x를 방문한 것으로 표시하고, 방문한 노드의 개수를 증가
         check[x] = 1;
         checked++;
-
+  
         for (y = 0; y < V; y++) {
+			// x 노드에서 y 노드로 가는 경로가 존재하지 않거나, y 노드가 이미 방문된 경우에는 다음 반복으로 넘어감
             if (x == y || a[x][y] >= INFINITE || check[y])
                 continue;
 
+			// 현재 노드 x까지의 거리(distance[x])에 x에서 y로 가는 거리(a[x][y])를 더하여 d에 저장
             d = distance[x] + a[x][y];
 
-            if (d < distance[y]) {
-                distance[y] = d;
-                parent[y] = x;
+			if (d < distance[y]) {  // x 노드를 거쳐서 y 노드로 가는 경로가 현재 알려진 최단 경로보다 짧은 경우
+				distance[y] = d;    // y 노드까지의 최단 거리를 d로 업데이트
+				parent[y] = x;      // y 노드의 부모 노드를 x로 설정
             }
         }
 
